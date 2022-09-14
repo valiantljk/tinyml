@@ -118,6 +118,9 @@ def loadCSV(csvf):
     :return: {label:[file1, file2 ...]}
     """
     dictLabels = {}
+    print("csvf")
+    import os
+    print("current pwd:",os.getcwd())
     with open(csvf) as csvfile:
         csvreader = csv.reader(csvfile, delimiter=',')
         next(csvreader, None)  # skip (filename, label)
