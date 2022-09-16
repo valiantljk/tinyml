@@ -7,7 +7,7 @@ import torch.optim as optim
 from help_code_demo import ToTensor, IEGM_DataSET
 from models.model_1 import IEGMNet
 from torch.utils.data import random_split
-
+import os
 
 import ray
 from ray import tune
@@ -22,14 +22,15 @@ def train(config):
     LR = config["lr"]
     EPOCH = config["epoch"]
     SIZE = 1250
-    path_data = "/Users/dr6jl/Documents/tinyml/data/tinyml/"
-    path_indices = "/Users/dr6jl/Documents/tinyml/training/data_indices/"
+    path_data = "/root/data/tinyml/"
+    path_indices = "/root/tinyml/training/data_indices/"
 
     # Instantiating NN
     net = IEGMNet()
     net.train()
     device = "cuda:0" if torch.cuda.is_available() else "cpu"
     net = net.float().to(device)
+    #net.half()
 
     # Start dataset loading
     trainset = IEGM_DataSET(root_dir=path_data,
@@ -124,21 +125,21 @@ def train(config):
             outputs_test = net(IEGM_test)
             _, predicted_test = torch.max(outputs_test.data, 1)
             total += labels_test.size(0)
-            correct += (predicted_test == labels_test).sum()
+            correct += (predicted_test == labels_test).sum().item()
 
             loss_test = criterion(outputs_test, labels_test)
-            running_loss_test += loss_test.item()
+            running_loss_test += loss_test.item() # loss_test.cpu().numpy()
             i += 1
 
         print('Test Acc: %.5f Test Loss: %.5f' % (correct / total, running_loss_test / i))
 
-        Test_loss.append(running_loss_test / i)
-        Test_acc.append((correct / total).item())
-
-    os.mkdir("tuned_model",exist_ok=True)
-    torch.save((net,net.state_dict()),"tuned_models/checkpoint.pt")
-    checkpoint = Checkpoint.from_directory("tuned_models")
-    session.report({"loss":Test_loss,"accuracy":Test_acc}, checkpoint = checkpoint)
+        #Test_loss.append(running_loss_test / i)
+        #Test_acc.append((correct / total).item())
+        tuned_dir = "/root/tinyml/training/tuned_model"
+        os.makedirs(tuned_dir,exist_ok=True)
+        torch.save((net,net.state_dict()),tuned_dir+"/checkpoint.pt")
+        checkpoint = Checkpoint.from_directory(tuned_dir)
+        session.report({"loss":running_loss_test/i,"accuracy":correct/total}, checkpoint = checkpoint)
 
     print('Finish training')
 
@@ -157,8 +158,8 @@ def test_best_model(best_result,config):
     i = 0.0
     running_loss_test = 0.0
     SIZE = 1250
-    path_data = "/Users/dr6jl/Documents/tinyml/data/tinyml"
-    path_indices = "/Users/dr6jl/Documents/tinyml/training/data_indices"
+    path_data = "/root/data/tinyml/"
+    path_indices = "/root/tinyml/training/data_indices/"
     testset = IEGM_DataSET(root_dir=path_data,
                            indice_dir=path_indices,
                            mode='test',
@@ -227,6 +228,7 @@ def tune_main(num_samples=10, max_num_epochs=10, gpus_per_trial=2):
 
 if __name__ == '__main__':
     num_gpus=torch.cuda.device_count()
+    print("number of gpus:%d"%num_gpus)
     if num_gpus==0:
         ns = 1
         gpt=0
