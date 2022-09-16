@@ -131,13 +131,13 @@ def train(config):
             running_loss_test += loss_test.item() # loss_test.cpu().numpy()
             i += 1
 
-        print('Test Acc: %.5f Test Loss: %.5f' % (correct / total, running_loss_test / i))
+        #print('Test Acc: %.5f Test Loss: %.5f' % (correct / total, running_loss_test / i))
 
         #Test_loss.append(running_loss_test / i)
         #Test_acc.append((correct / total).item())
         tuned_dir = "/root/tinyml/training/tuned_model"
         os.makedirs(tuned_dir,exist_ok=True)
-        torch.save((net,net.state_dict()),tuned_dir+"/checkpoint.pt")
+        torch.save((net.state_dict(),optimizer.state_dict()),tuned_dir+"/checkpoint.pt")
         checkpoint = Checkpoint.from_directory(tuned_dir)
         session.report({"loss":running_loss_test/i,"accuracy":correct/total}, checkpoint = checkpoint)
 
@@ -150,9 +150,10 @@ def test_best_model(best_result,config):
     best_trained_model.to(device)
 
     checkpoint_path = os.path.join(best_result.checkpoint.to_directory(), "checkpoint.pt")
-
+    print("checkpointing path:%s"%checkpoint_path)
     model_state, optimizer_state = torch.load(checkpoint_path)
     best_trained_model.load_state_dict(model_state)
+    criterion = nn.CrossEntropyLoss()
     correct = 0.0
     total = 0.0
     i = 0.0
@@ -166,7 +167,7 @@ def test_best_model(best_result,config):
                            size=SIZE,
                            transform=transforms.Compose([ToTensor()]))
 
-    testloader = DataLoader(testset, batch_size=config["BATCH_SIZE_TEST"], shuffle=True, num_workers=0)
+    testloader = DataLoader(testset, batch_size=best_result.config["batchsz"], shuffle=True, num_workers=0)
 
     for data_test in testloader:
         best_trained_model.eval()
@@ -182,7 +183,7 @@ def test_best_model(best_result,config):
         running_loss_test += loss_test.item()
         i += 1
 
-    print('Best trial Test Acc: %.5f Test Loss: %.5f' % (correct / total, running_loss_test / i))
+    print('Final Test Acc: %.5f Test Loss: %.5f' % (correct / total, running_loss_test / i))
 
 
 
