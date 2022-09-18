@@ -26,7 +26,7 @@ def train(config):
     path_indices = "/root/tinyml/training/data_indices/"
 
     # Instantiating NN
-    net = IEGMNet()
+    net = IEGMNet(config)
     net.train()
     device = "cuda:0" if torch.cuda.is_available() else "cpu"
     net = net.float().to(device)
@@ -143,9 +143,9 @@ def train(config):
 
     print('Finish training')
 
-def test_best_model(best_result,config):
-    best_trained_model = IEGMNet()
-    best_trained_model.train()
+def test_best_model(best_result):
+    best_trained_model = IEGMNet(best_result.config)
+    #best_trained_model.train()
     device = "cuda:0" if torch.cuda.is_available() else "cpu"
     best_trained_model.to(device)
 
@@ -153,6 +153,8 @@ def test_best_model(best_result,config):
     print("checkpointing path:%s"%checkpoint_path)
     model_state, optimizer_state = torch.load(checkpoint_path)
     best_trained_model.load_state_dict(model_state)
+    torch.save(best_trained_model, '/root/tinyml/training/tuned_model/IEGM_net.pkl')
+    torch.save(model_state, '/root/tinyml/training/tuned_model/IEGM_net_state_dict.pkl')
     criterion = nn.CrossEntropyLoss()
     correct = 0.0
     total = 0.0
@@ -187,11 +189,13 @@ def test_best_model(best_result,config):
 
 
 
-def tune_main(num_samples=10, max_num_epochs=10, gpus_per_trial=2):
+def tune_main(num_samples=10, max_num_epochs=40, gpus_per_trial=2):
     config = {
-        "batchsz": tune.choice([8,32,64]),
+        "batchsz": tune.choice([8,32,64,128]),
         "lr": tune.loguniform(1e-4, 1e-1),
-        "epoch": tune.choice([5,10,20]),
+        "epoch": tune.choice([5,10,20,40]),
+        "drop":tune.choice([0.5,0.1,0.2,0.3,0.4,0.7,0.9]),
+        "momentum":tune.choice([0.1,0.2,0.3,0.5])
         # "size": tune.choice([1250]),
         # "path_data":tune.choice(["../data/tinyml"]),
         # "path_indices":tune.choice(["./data_indices"])
@@ -224,7 +228,7 @@ def tune_main(num_samples=10, max_num_epochs=10, gpus_per_trial=2):
     print("Best trial final validation accuracy: {}".format(
         best_result.metrics["accuracy"]))
 
-    test_best_model(best_result,config)
+    test_best_model(best_result)
 
 
 if __name__ == '__main__':
@@ -236,6 +240,7 @@ if __name__ == '__main__':
     else:
         ns = num_gpus*2
         gpt=0.5
-    tune_main(num_samples=ns, max_num_epochs=20, gpus_per_trial=gpt)
+    tune_main(num_samples=ns, max_num_epochs=40, gpus_per_trial=gpt)
+    print("number of gpus:%d"%num_gpus)
 
 
