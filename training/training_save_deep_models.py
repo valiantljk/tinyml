@@ -19,7 +19,8 @@ def main():
     path_indices = args.path_indices
 
     # Instantiating NN
-    net = IEGMNet()
+    config={"drop":0.3,"momentum":0.5}
+    net = IEGMNet(config)
     net.train()
     net = net.float().to(device)
 
