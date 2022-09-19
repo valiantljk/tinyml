@@ -153,8 +153,8 @@ def test_best_model(best_result):
     print("checkpointing path:%s"%checkpoint_path)
     model_state, optimizer_state = torch.load(checkpoint_path)
     best_trained_model.load_state_dict(model_state)
-    torch.save(best_trained_model, '/root/tinyml/training/tuned_model/IEGM_net.pkl')
-    torch.save(model_state, '/root/tinyml/training/tuned_model/IEGM_net_state_dict.pkl')
+    torch.save(best_trained_model, '/root/tinyml/training/tuned_model/ray_tuned_IEGM_net.pkl')
+    torch.save(model_state, '/root/tinyml/training/tuned_model/ray_tuned_IEGM_net_state_dict.pkl')
     criterion = nn.CrossEntropyLoss()
     correct = 0.0
     total = 0.0
@@ -232,6 +232,8 @@ def tune_main(num_samples=10, max_num_epochs=40, gpus_per_trial=2):
 
 
 if __name__ == '__main__':
+    import torch
+    torch.manual_seed(42)
     num_gpus=torch.cuda.device_count()
     print("number of gpus:%d"%num_gpus)
     if num_gpus==0:
