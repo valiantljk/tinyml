@@ -1,6 +1,6 @@
 Neural Network Tools for STM32AI v1.6.0 (STM.ai v7.1.0-RC3)
-Created date          : 2022-09-27 21:46:39
-Parameters            : generate --name network -m /Users/dr6jl/Documents/tinyml-2022/tinyml-project/training/tuned_model/model_1.onnx --type onnx --compression 1 --verbosity 1 --workspace /var/folders/s7/4z1j63yj4wj918f4p4nz0fhm0000gp/T/mxAI_workspace13401845189164428369521930067130002 --output /Users/dr6jl/.stm32cubemx/network_output
+Created date          : 2022-09-27 22:02:37
+Parameters            : generate --name network -m /Users/dr6jl/Documents/tinyml-2022/tinyml-project/training/tuned_model/model_1.onnx --type onnx --compression 1 --verbosity 1 --workspace /var/folders/s7/4z1j63yj4wj918f4p4nz0fhm0000gp/T/mxAI_workspace13411370644862823657282678399005273 --output /Users/dr6jl/.stm32cubemx/network_output
 
 Exec/report summary (generate)
 ------------------------------------------------------------------------------------------------------------------------
@@ -8,7 +8,7 @@ model file            : /Users/dr6jl/Documents/tinyml-2022/tinyml-project/traini
 type                  : onnx
 c_name                : network
 compression           : None
-workspace dir         : /private/var/folders/s7/4z1j63yj4wj918f4p4nz0fhm0000gp/T/mxAI_workspace13401845189164428369521930067130002
+workspace dir         : /private/var/folders/s7/4z1j63yj4wj918f4p4nz0fhm0000gp/T/mxAI_workspace13411370644862823657282678399005273
 output dir            : /Users/dr6jl/.stm32cubemx/network_output
 model_name            : model_1
 model_hash            : 9d1587c92ad2486d88b8534cf64b3200
