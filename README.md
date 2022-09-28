@@ -20,6 +20,11 @@ from help_code_demo import pytorch2onnx
 pytorch2onnx('./tuned_model/ray_tuned_IEGM_net.pkl', './tuned_model/model_1', 1250)
 '''
 
+## Step 3: Code generation
+
+Following https://github.com/tinymlcontest/tinyml_contest2022_demo_example/blob/master/README-Cube.md and https://github.com/tinymlcontest/tinyml_contest2022_demo_evaluation/blob/main/How%20to%20validate%20X-CUBE-AI%20model%20on%20board.md
+
+Generated codes are saved in folder inference/
 
 ## TinyML Contest:
 * https://tinymlcontest.github.io/TinyML-Design-Contest/Problems.html
