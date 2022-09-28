@@ -1,0 +1,16 @@
+tinyml-gen\network_data.o: ../Src/network_data.c
+tinyml-gen\network_data.o: ../Inc/network_data.h
+tinyml-gen\network_data.o: ../Inc/network_config.h
+tinyml-gen\network_data.o: ../Middlewares/ST/AI/Inc/ai_platform.h
+tinyml-gen\network_data.o: C:\Keil_v5\ARM\ARMCompiler\Bin\..\include\stdint.h
+tinyml-gen\network_data.o: C:\Keil_v5\ARM\ARMCompiler\Bin\..\include\stddef.h
+tinyml-gen\network_data.o: C:\Keil_v5\ARM\ARMCompiler\Bin\..\include\inttypes.h
+tinyml-gen\network_data.o: C:\Keil_v5\ARM\ARMCompiler\Bin\..\include\stdbool.h
+tinyml-gen\network_data.o: ../Middlewares/ST/AI/Inc/ai_platform_interface.h
+tinyml-gen\network_data.o: ../Middlewares/ST/AI/Inc/datatypes_network.h
+tinyml-gen\network_data.o: ../Middlewares/ST/AI/Inc/ai_datatypes.h
+tinyml-gen\network_data.o: C:\Keil_v5\ARM\ARMCompiler\Bin\..\include\string.h
+tinyml-gen\network_data.o: ../Middlewares/ST/AI/Inc/ai_datatypes_format.h
+tinyml-gen\network_data.o: ../Middlewares/ST/AI/Inc/ai_datatypes_defines.h
+tinyml-gen\network_data.o: ../Middlewares/ST/AI/Inc/core_datatypes.h
+tinyml-gen\network_data.o: ../Middlewares/ST/AI/Inc/formats_list.h
